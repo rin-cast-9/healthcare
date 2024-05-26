@@ -16,5 +16,7 @@ public interface HealthDataRepository extends JpaRepository<HealthData, Long> {
 
     void deleteAllByUserId(Long userId);
 
-    void deleteByTimestampBetweenAndUserId(LocalDateTime from, LocalDateTime to, Long userId);
+    void deleteByStartDateBetweenAndUserId(LocalDateTime from, LocalDateTime to, Long userId);
+
+    List<HealthData> findByUserIdAndDataTypeIdAndStartDateIsAfter(Long userId, Long dataTypeId, LocalDateTime localDateTime);
 }

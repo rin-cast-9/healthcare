@@ -2,12 +2,17 @@ package com.rincast.healthcare_backend.service;
 
 
 import com.rincast.healthcare_backend.dto.HRVResponse;
+import com.rincast.healthcare_backend.dto.HeartRateGetDataResponse;
 import com.rincast.healthcare_backend.dto.HeartRateResponse;
+import com.rincast.healthcare_backend.model.HealthData;
 import com.rincast.healthcare_backend.repository.DataTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HeartService {
@@ -26,7 +31,7 @@ public class HeartService {
         Long dataTypeId = 0L;
         String unit = "count/min";
 
-        healthDataService.saveHealthData(userId, dataTypeId, heartRateValue, unit, timestamp);
+        healthDataService.saveHealthData(userId, dataTypeId, heartRateValue, unit, timestamp, timestamp);
 
         return HeartRateResponse.builder()
                 .userId(userId)
@@ -41,7 +46,7 @@ public class HeartService {
         Long dataTypeId = 1L;
         String unit = "ms";
 
-        healthDataService.saveHealthData(userId, dataTypeId, heartRateVariabilityValue, unit, timestamp);
+        healthDataService.saveHealthData(userId, dataTypeId, heartRateVariabilityValue, unit, timestamp, timestamp);
 
         return HRVResponse.builder()
                 .userId(userId)
@@ -54,6 +59,19 @@ public class HeartService {
 
     public void deleteHeartDataById(Long id) {
         healthDataService.deleteHealthDataById(id);
+    }
+
+    public List<HeartRateGetDataResponse> getHeartRateData(Long userId) {
+        var rawData = healthDataService.getHealthDataByUserIdAndDataType(userId, 0L);
+
+        System.out.println(rawData.size());
+
+        return rawData.stream()
+                .map(healthData -> HeartRateGetDataResponse.builder()
+                    .value(healthData.getIntegerValue())
+                    .timestamp(healthData.getStartDate())
+                    .build())
+                .toList();
     }
 
 }

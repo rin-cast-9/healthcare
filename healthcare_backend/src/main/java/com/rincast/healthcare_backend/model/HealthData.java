@@ -47,13 +47,15 @@ public class HealthData {
     private Double floatValue;
 
     @Column(name = "string_value")
-    @Enumerated(EnumType.STRING)
-    private SleepData stringValue;
+    private String stringValue;
 
     @Column(name = "unit")
     private String unit;
 
-    @Column(name = "timestamp", nullable = false)
-    private LocalDateTime timestamp;
+    @Column(name = "start_date", nullable = false)
+    private LocalDateTime startDate;
+
+    @Column(name = "end_date", nullable = false)
+    private LocalDateTime endDate;
 
 }
